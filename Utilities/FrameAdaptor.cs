@@ -17,7 +17,7 @@ namespace Ruminoid.Common.Renderer.Utilities
 
         #region Constructor
 
-        public FrameAdaptor(int frameRate, long total)
+        public FrameAdaptor(int frameRate, int total)
         {
             FrameRate = frameRate;
             TotalFrame = (int) Math.Floor((double) total * frameRate / 1000);
