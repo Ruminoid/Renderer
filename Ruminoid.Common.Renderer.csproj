@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="LibAss\LibAssInterop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\FrameAdaptor.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
