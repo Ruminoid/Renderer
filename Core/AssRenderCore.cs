@@ -28,7 +28,9 @@ namespace Ruminoid.Common.Renderer.Core
             ref string subData,
             int width,
             int height,
-            int threadCount)
+            int threadCount,
+            int glaphMax,
+            int bitmapMax)
         {
             // Initialize User Data
             _width = width;
@@ -39,7 +41,10 @@ namespace Ruminoid.Common.Renderer.Core
             _rcContext = ruminoid_rendercore.RuminoidRcNewContext();
             _renderContexts = new IntPtr[threadCount];
             for (int i = 0; i < threadCount; i++)
+            {
                 _renderContexts[i] = ruminoid_rendercore.RuminoidRcNewRenderContext(_rcContext);
+                ruminoid_rendercore.RuminoidRcSetCacheLimits(_renderContexts[i], glaphMax, bitmapMax);
+            }
             UpdateSubtitle(ref subData, (ulong)subData.Length);
         }
 
