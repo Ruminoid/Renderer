@@ -11,13 +11,14 @@ namespace Ruminoid.Common.Renderer.Core
     {
         #region User Data
 
-        private int _width, _height;
+        private readonly int _width, _height, _threadCount;
 
         #endregion
 
         #region Core Data
 
         private IntPtr _rcContext;
+        private IntPtr[] _renderContexts;
 
         #endregion
 
@@ -26,14 +27,19 @@ namespace Ruminoid.Common.Renderer.Core
         public AssRenderCore(
             ref string subData,
             int width,
-            int height)
+            int height,
+            int threadCount)
         {
             // Initialize User Data
             _width = width;
             _height = height;
+            _threadCount = threadCount;
 
             // Initialize Core Data
             _rcContext = ruminoid_rendercore.RuminoidRcNewContext();
+            _renderContexts = new IntPtr[threadCount];
+            for (int i = 0; i < threadCount; i++)
+                _renderContexts[i] = ruminoid_rendercore.RuminoidRcNewRenderContext(_rcContext);
             UpdateSubtitle(ref subData, (ulong)subData.Length);
         }
 
@@ -41,10 +47,10 @@ namespace Ruminoid.Common.Renderer.Core
 
         #region Methods
 
-        public RuminoidImageT Render(int milliSec)
+        public RuminoidImageT Render(int threadIndex, int milliSec)
         {
-            ruminoid_rendercore.RuminoidRcRenderFrame(_rcContext, _width, _height, milliSec);
-            return ruminoid_rendercore.RuminoidRcGetResult(_rcContext);
+            ruminoid_rendercore.RuminoidRcRenderFrame(_renderContexts[threadIndex], _width, _height, milliSec);
+            return ruminoid_rendercore.RuminoidRcGetResult(_renderContexts[threadIndex]);
         }
 
         public void UpdateSubtitle(ref string subData, ulong length) =>
@@ -65,6 +71,9 @@ namespace Ruminoid.Common.Renderer.Core
 
         public void Dispose()
         {
+            for (int i = 0; i < _threadCount; i++)
+                if (_renderContexts[i] != IntPtr.Zero)
+                    ruminoid_rendercore.RuminoidRcDestroyRenderContext(_renderContexts[i]);
             if (_rcContext != IntPtr.Zero)
                 ruminoid_rendercore.RuminoidRcDestroyContext(_rcContext);
         }
