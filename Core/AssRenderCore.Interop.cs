@@ -174,7 +174,7 @@ namespace Ruminoid.Common.Renderer.Core
         }
     }
 
-    public class ruminoid_rendercore
+    internal class ruminoid_rendercore
     {
         public struct __Internal
         {
