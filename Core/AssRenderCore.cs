@@ -24,7 +24,7 @@ namespace Ruminoid.Common.Renderer.Core
         #region Constructor
 
         public AssRenderCore(
-            string subData,
+            ref string subData,
             int width,
             int height)
         {
@@ -34,7 +34,7 @@ namespace Ruminoid.Common.Renderer.Core
 
             // Initialize Core Data
             _rcContext = ruminoid_rendercore.RuminoidRcNewContext();
-            UpdateSubtitle(subData, (ulong) subData.Length);
+            UpdateSubtitle(ref subData, (ulong)subData.Length);
         }
 
         #endregion
@@ -47,7 +47,7 @@ namespace Ruminoid.Common.Renderer.Core
             return ruminoid_rendercore.RuminoidRcGetResult(_rcContext);
         }
 
-        public void UpdateSubtitle(string subData, ulong length) =>
+        public void UpdateSubtitle(ref string subData, ulong length) =>
             ruminoid_rendercore.RuminoidRcUpdateSubtitle(_rcContext, subData, length);
 
         public static unsafe byte[] Decode(RuminoidImageT image)
