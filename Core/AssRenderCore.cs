@@ -29,7 +29,7 @@ namespace Ruminoid.Common.Renderer.Core
             int width,
             int height,
             int threadCount,
-            int glaphMax,
+            int glyphMax,
             int bitmapMax)
         {
             // Initialize User Data
@@ -43,7 +43,7 @@ namespace Ruminoid.Common.Renderer.Core
             for (int i = 0; i < threadCount; i++)
             {
                 _renderContexts[i] = ruminoid_rendercore.RuminoidRcNewRenderContext(_rcContext);
-                ruminoid_rendercore.RuminoidRcSetCacheLimits(_renderContexts[i], glaphMax, bitmapMax);
+                ruminoid_rendercore.RuminoidRcSetCacheLimits(_renderContexts[i], glyphMax, bitmapMax);
             }
             UpdateSubtitle(ref subData, (ulong)subData.Length);
         }
