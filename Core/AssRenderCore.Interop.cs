@@ -190,19 +190,34 @@ namespace Ruminoid.Common.Renderer.Core
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "ruminoid_rc_render_frame")]
-            internal static extern void RuminoidRcRenderFrame(IntPtr context, int width, int height, int timeMs);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "ruminoid_rc_update_subtitle")]
             [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool RuminoidRcUpdateSubtitle(IntPtr context, [MarshalAs(UnmanagedType.LPUTF8Str)] string content, ulong length);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "ruminoid_rc_new_render_context")]
+            internal static extern IntPtr RuminoidRcNewRenderContext(IntPtr context);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "ruminoid_rc_destroy_render_context")]
+            internal static extern void RuminoidRcDestroyRenderContext(IntPtr render_context);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "ruminoid_rc_render_frame")]
+            internal static extern void RuminoidRcRenderFrame(IntPtr render_context, int width, int height, int timeMs);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "ruminoid_rc_get_result")]
-            internal static extern IntPtr RuminoidRcGetResult(IntPtr context);
+            internal static extern IntPtr RuminoidRcGetResult(IntPtr render_context);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "ruminoid_rc_set_cache_limits")]
+            internal static extern void RuminoidRcSetCacheLimits(IntPtr render_context, int glyph_max_num, int bitmap_max_mb);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.Cdecl,
@@ -221,26 +236,42 @@ namespace Ruminoid.Common.Renderer.Core
             __Internal.RuminoidRcDestroyContext(context);
         }
 
-        public static void RuminoidRcRenderFrame(IntPtr context, int width, int height, int timeMs)
-        {
-            __Internal.RuminoidRcRenderFrame(context, width, height, timeMs);
-        }
-
         public static bool RuminoidRcUpdateSubtitle(IntPtr context, string content, ulong length)
         {
             var __ret = __Internal.RuminoidRcUpdateSubtitle(context, content, length);
             return __ret;
         }
 
-        public static RuminoidImageT RuminoidRcGetResult(IntPtr context)
+        public static IntPtr RuminoidRcNewRenderContext(IntPtr context)
         {
-            var __ret = __Internal.RuminoidRcGetResult(context);
+            var __ret = __Internal.RuminoidRcNewRenderContext(context);
+            return __ret;
+        }
+
+        public static void RuminoidRcDestroyRenderContext(IntPtr render_context)
+        {
+            __Internal.RuminoidRcDestroyRenderContext(render_context);
+        }
+
+        public static void RuminoidRcRenderFrame(IntPtr render_context, int width, int height, int timeMs)
+        {
+            __Internal.RuminoidRcRenderFrame(render_context, width, height, timeMs);
+        }
+
+        public static RuminoidImageT RuminoidRcGetResult(IntPtr render_context)
+        {
+            var __ret = __Internal.RuminoidRcGetResult(render_context);
             RuminoidImageT __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
             else if (RuminoidImageT.NativeToManagedMap.ContainsKey(__ret))
                 __result0 = RuminoidImageT.NativeToManagedMap[__ret];
             else __result0 = RuminoidImageT.__CreateInstance(__ret);
             return __result0;
+        }
+
+        public static void RuminoidRcSetCacheLimits(IntPtr render_context, int glyph_max_num, int bitmap_max_mb)
+        {
+            __Internal.RuminoidRcSetCacheLimits(render_context, glyph_max_num, bitmap_max_mb);
         }
 
         public static void RuminoidRcAttachLogCallback(IntPtr context, ruminoid_rc_log_callback callback)
