@@ -29,7 +29,7 @@ namespace Ruminoid.Common.Renderer.Core
             internal ulong compressed_size;
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.Cdecl,
+            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.StdCall,
                 EntryPoint = "??0ruminoid_image_t@@QEAA@AEBU0@@Z")]
             internal static extern IntPtr cctor(IntPtr __instance, IntPtr _0);
         }
@@ -179,48 +179,48 @@ namespace Ruminoid.Common.Renderer.Core
         public struct __Internal
         {
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.Cdecl,
+            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.StdCall,
                 EntryPoint = "ruminoid_rc_new_context")]
             internal static extern IntPtr RuminoidRcNewContext();
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.Cdecl,
+            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.StdCall,
                 EntryPoint = "ruminoid_rc_destroy_context")]
             internal static extern void RuminoidRcDestroyContext(IntPtr context);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.Cdecl,
+            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.StdCall,
                 EntryPoint = "ruminoid_rc_update_subtitle")]
             [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool RuminoidRcUpdateSubtitle(IntPtr context, [MarshalAs(UnmanagedType.LPUTF8Str)] string content, ulong length);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.Cdecl,
+            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.StdCall,
                 EntryPoint = "ruminoid_rc_new_render_context")]
             internal static extern IntPtr RuminoidRcNewRenderContext(IntPtr context);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.Cdecl,
+            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.StdCall,
                 EntryPoint = "ruminoid_rc_destroy_render_context")]
             internal static extern void RuminoidRcDestroyRenderContext(IntPtr render_context);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.Cdecl,
+            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.StdCall,
                 EntryPoint = "ruminoid_rc_render_frame")]
             internal static extern void RuminoidRcRenderFrame(IntPtr render_context, int width, int height, int timeMs);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.Cdecl,
+            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.StdCall,
                 EntryPoint = "ruminoid_rc_get_result")]
             internal static extern IntPtr RuminoidRcGetResult(IntPtr render_context);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.Cdecl,
+            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.StdCall,
                 EntryPoint = "ruminoid_rc_set_cache_limits")]
             internal static extern void RuminoidRcSetCacheLimits(IntPtr render_context, int glyph_max_num, int bitmap_max_mb);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.Cdecl,
+            [DllImport("Libraries/ruminoid_rendercore.dll", CallingConvention = CallingConvention.StdCall,
                 EntryPoint = "ruminoid_rc_attach_log_callback")]
             internal static extern void RuminoidRcAttachLogCallback(IntPtr context, IntPtr callback);
         }
