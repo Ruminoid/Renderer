@@ -66,16 +66,12 @@ namespace Ruminoid.Common.Renderer.Core
                 CompressedSize = img.CompressedSize,
                 Width = img.Width,
                 Height = img.Height,
-                Stride = img.Stride
+                Stride = img.Stride,
+                Buffer = (byte*)Marshal.AllocHGlobal((int)img.CompressedSize)
             };
 
-            byte[] buffer = new byte[img.CompressedSize];
-            fixed (byte* bufferPtr = buffer)
-            {
-                for (ulong i = 0; i < img.CompressedSize; i++)
-                    bufferPtr[i] = img.Buffer[i];
-                result.Buffer = bufferPtr;
-            }
+            for (ulong i = 0; i < img.CompressedSize; i++)
+                result.Buffer[i] = img.Buffer[i];
 
             return result;
         }
@@ -83,25 +79,23 @@ namespace Ruminoid.Common.Renderer.Core
         public void UpdateSubtitle(ref string subData, ulong length) =>
             ruminoid_rendercore.RuminoidRcUpdateSubtitle(_rcContext, subData, length);
 
-        public static unsafe byte* Decode(RuminoidImageT image)
+        public static unsafe IntPtr Decode(RuminoidImageT image)
         {
             int width = image.Width,
                 height = image.Height,
                 stride = image.Stride;
-            byte[] result = new byte[width * height * 4];
-            fixed (byte* ptr = result)
-            {
-                LZ4Codec.Decode(image.Buffer, (int) image.CompressedSize, ptr, height * stride);
-                if (image.Width * 4 != image.Stride)
-                    for (int line = 1; line < height; line++)
-                        Array.ConstrainedCopy(
-                            result,
-                            line * stride,
-                            result,
-                            line * width * 4,
-                            width * 4);
-                return ptr;
-            }
+
+            byte* result = (byte*) Marshal.AllocHGlobal(width * height * 4);
+
+            LZ4Codec.Decode(image.Buffer, (int)image.CompressedSize, result, height * stride);
+            if (image.Width * 4 != image.Stride)
+                for (int line = 1; line < height; line++)
+                {
+                    for (int i = 0; i < width * 4; i++)
+                        result[line * width * 4 + i] = result[line * stride + i];
+                }
+
+            return (IntPtr) result;
         }
 
         #endregion
