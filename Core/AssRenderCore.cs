@@ -83,13 +83,25 @@ namespace Ruminoid.Common.Renderer.Core
         public void UpdateSubtitle(ref string subData, ulong length) =>
             ruminoid_rendercore.RuminoidRcUpdateSubtitle(_rcContext, subData, length);
 
-        public static unsafe byte[] Decode(RuminoidImageT image)
+        public static unsafe byte* Decode(RuminoidImageT image)
         {
-            int size = image.Width * image.Height * 4;
-            byte[] result = new byte[size];
+            int width = image.Width,
+                height = image.Height,
+                stride = image.Stride;
+            byte[] result = new byte[width * height * 4];
             fixed (byte* ptr = result)
-                LZ4Codec.Decode(image.Buffer, (int) image.CompressedSize, ptr, size);
-            return result;
+            {
+                LZ4Codec.Decode(image.Buffer, (int) image.CompressedSize, ptr, height * stride);
+                if (image.Width * 4 != image.Stride)
+                    for (int line = 1; line < height; line++)
+                        Array.ConstrainedCopy(
+                            result,
+                            line * stride,
+                            result,
+                            line * width * 4,
+                            width * 4);
+                return ptr;
+            }
         }
 
         #endregion
