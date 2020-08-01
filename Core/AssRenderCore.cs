@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using K4os.Compression.LZ4;
@@ -55,7 +56,28 @@ namespace Ruminoid.Common.Renderer.Core
         public RuminoidImageT Render(int threadIndex, int milliSec)
         {
             ruminoid_rendercore.RuminoidRcRenderFrame(_renderContexts[threadIndex], _width, _height, milliSec);
-            return ruminoid_rendercore.RuminoidRcGetResult(_renderContexts[threadIndex]);
+            return CopyImage(ruminoid_rendercore.RuminoidRcGetResult(_renderContexts[threadIndex]));
+        }
+
+        private static unsafe RuminoidImageT CopyImage(RuminoidImageT img)
+        {
+            RuminoidImageT result = new RuminoidImageT()
+            {
+                CompressedSize = img.CompressedSize,
+                Width = img.Width,
+                Height = img.Height,
+                Stride = img.Stride
+            };
+
+            byte[] buffer = new byte[img.CompressedSize];
+            fixed (byte* bufferPtr = buffer)
+            {
+                for (ulong i = 0; i < img.CompressedSize; i++)
+                    bufferPtr[i] = img.Buffer[i];
+                result.Buffer = bufferPtr;
+            }
+
+            return result;
         }
 
         public void UpdateSubtitle(ref string subData, ulong length) =>
