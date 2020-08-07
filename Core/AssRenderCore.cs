@@ -105,7 +105,7 @@ namespace Ruminoid.Common.Renderer.Core
 
             // Initialize Core Data
             _rcContext = ruminoid_rendercore.RuminoidRcNewContext();
-            UpdateSubtitle(ref subData, (ulong)subData.Length);
+            UpdateSubtitle(ref subData, (ulong)Encoding.UTF8.GetByteCount(subData));
         }
 
         #endregion
